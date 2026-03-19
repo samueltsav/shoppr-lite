@@ -1,0 +1,104 @@
+.page { min-height: 80vh; }
+
+.header {
+  background: var(--color-secondary-900);
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+.headerInner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary-500);
+  margin-bottom: var(--space-xs);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: var(--color-tertiary-100);
+}
+
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  color: var(--color-secondary-400);
+  pointer-events: none;
+}
+
+.searchInput {
+  padding: var(--space-sm) var(--space-sm) var(--space-sm) 38px;
+  background: var(--color-secondary-800);
+  border: 1px solid var(--color-secondary-600);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--color-tertiary-200);
+  min-width: 240px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.searchInput::placeholder { color: var(--color-secondary-500); }
+
+.searchInput:focus { border-color: var(--color-primary-500); }
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+.count {
+  font-size: 0.85rem;
+  color: var(--color-secondary-400);
+  margin-bottom: var(--space-lg);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.empty {
+  text-align: center;
+  padding: var(--space-3xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.emptyIcon { font-size: 2.5rem; }
+
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-secondary-700);
+}
+
+.emptySub {
+  font-size: 0.9rem;
+  color: var(--color-secondary-400);
+}
+
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .grid { grid-template-columns: 1fr; } }

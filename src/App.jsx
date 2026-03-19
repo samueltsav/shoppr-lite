@@ -1,12 +1,12 @@
-import { Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout";
-import HomePage from "./pages/HomePage";
-import ShopPage from "./pages/ShopPage";
-import ProductPage from "./pages/ProductPage";
-import CartPage from "./pages/CartPage";
-import BlogPage from "./pages/BlogPage";
-import PostPage from "./pages/PostPage";
-import NotFoundPage from "./pages/NotFoundPage";
+import { Routes, Route } from 'react-router-dom'
+import Layout from './components/layout/Layout'
+import HomePage from './pages/HomePage'
+import ShopPage from './pages/ShopPage'
+import ProductPage from './pages/ProductPage'
+import CartPage from './pages/CartPage'
+import BlogPage from './pages/BlogPage'
+import PostPage from './pages/PostPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
   return (
@@ -21,5 +21,5 @@ export default function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
-  );
+  )
 }
