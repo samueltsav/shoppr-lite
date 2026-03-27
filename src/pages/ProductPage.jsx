@@ -1,266 +1,191 @@
-import { useState, useMemo } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import {
-  ShoppingBag,
-  ArrowLeft,
-  Minus,
-  Plus,
-  Package,
-  Tag,
-  Star,
-} from "lucide-react";
-import { useFetch } from "../hooks/useFetch";
-import { API_BASE, formatPrice, getImageUrl } from "../utils/helpers";
-import { useCart } from "../context/CartContext";
-import StarRating from "../components/ui/StarRating";
-import ProductCard from "../components/ProductCard";
-import Spinner from "../components/ui/Spinner";
-import ErrorMessage from "../components/ui/ErrorMessage";
-import styles from "./ProductPage.module.css";
+import { useState, useMemo } from 'react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, ShoppingBag, Package, Star, Shield, Minus, Plus } from 'lucide-react'
+import { useFetch } from '../hooks/useFetch.js'
+import { API_BASE } from '../utils/constants.js'
+import { useCart } from '../context/CartContext.jsx'
+import { formatPrice } from '../utils/helpers.js'
+import StarRating from '../components/ui/StarRating.jsx'
+import Badge from '../components/ui/Badge.jsx'
+import ProductCard from '../components/product/ProductCard.jsx'
+import Spinner from '../components/ui/Spinner.jsx'
+import ErrorMessage from '../components/ui/ErrorMessage.jsx'
+import styles from './ProductPage.module.css'
 
 export default function ProductPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { addItem } = useCart();
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { addItem } = useCart()
 
-  const {
-    data: product,
-    loading,
-    error,
-  } = useFetch(`${API_BASE}/products/${id}`);
-  const { data: allProducts } = useFetch(`${API_BASE}/products`);
+  const { data: product, loading, error } = useFetch(`${API_BASE}/products/${id}`)
+  const { data: allData } = useFetch(product ? `${API_BASE}/products?limit=100` : null)
 
-  const [selectedColor, setSelectedColor] = useState("");
-  const [selectedSize, setSelectedSize] = useState("");
-  const [qty, setQty] = useState(1);
-  const [warn, setWarn] = useState("");
-  const [added, setAdded] = useState(false);
-
-  const variants = product?.meta?.variants ?? [];
-
-  const selectedVariant = useMemo(
-    () => variants.find((v) => v.color === selectedColor),
-    [variants, selectedColor],
-  );
-
-  const selectedSku = useMemo(
-    () => selectedVariant?.sizes.find((s) => s.size === selectedSize),
-    [selectedVariant, selectedSize],
-  );
-
-  const maxQty = selectedSku?.stock ?? 0;
+  const [qty, setQty] = useState(1)
+  const [activeImg, setActiveImg] = useState(0)
+  const [added, setAdded] = useState(false)
 
   const related = useMemo(() => {
-    if (!allProducts || !product) return [];
-    return allProducts
-      .filter((p) => p.category === product.category && p.id !== product.id)
-      .slice(0, 4);
-  }, [allProducts, product]);
+    if (!product || !allData) return []
+    return (allData.products ?? [])
+      .filter(p => p.category === product.category && p.id !== product.id)
+      .slice(0, 4)
+  }, [product, allData])
 
-  function handleColorSelect(color) {
-    setSelectedColor(color);
-    setSelectedSize("");
-    setWarn("");
+  function handleAdd() {
+    addItem(product, qty)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1800)
   }
 
-  function handleSizeSelect(size) {
-    setSelectedSize(size);
-    setWarn("");
-  }
+  if (loading) return <Spinner fullPage />
+  if (error) return <ErrorMessage message={error} />
+  if (!product) return null
 
-  function handleAddToCart() {
-    if (!selectedColor) {
-      setWarn("Please select a colour.");
-      return;
-    }
-    if (!selectedSize) {
-      setWarn("Please select a size.");
-      return;
-    }
-    if (!selectedSku || selectedSku.stock === 0) {
-      setWarn("This variant is out of stock.");
-      return;
-    }
+  const images = product.images?.length > 0
+    ? product.images
+    : [product.thumbnail]
 
-    addItem(product, selectedColor, selectedSize, selectedSku.sku, qty);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2500);
-    setWarn("");
-  }
-
-  if (loading) return <Spinner text="Loading product…" />;
-  if (error) return <ErrorMessage message={error} />;
+  const outOfStock = product.stock === 0
+  const lowStock = product.stock > 0 && product.stock <= 5
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* Breadcrumb */}
-        <div className={styles.breadcrumb}>
-          <button onClick={() => navigate(-1)} className={styles.back}>
-            <ArrowLeft size={15} /> Back
-          </button>
-          <span className={styles.breadSep}>/</span>
-          <Link to="/shop" className={styles.breadLink}>
-            Shop
-          </Link>
-          <span className={styles.breadSep}>/</span>
-          <span className={styles.breadCurrent}>{product?.name}</span>
-        </div>
+        {/* Back */}
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          <ArrowLeft size={16} /> Back
+        </button>
 
-        {/* Main product layout */}
-        <div className={styles.grid}>
-          {/* Image */}
-          <div className={styles.imageSection}>
-            <div className={styles.imgWrapper}>
+        {/* ── Product layout ── */}
+        <div className={styles.layout}>
+          {/* Images */}
+          <div className={styles.gallery}>
+            <div className={styles.mainImg}>
               <img
-                src={getImageUrl(product?.image)}
-                alt={product?.name}
-                className={styles.img}
-                onError={(e) => {
-                  e.target.src = "/placeholder.svg";
-                }}
+                src={images[activeImg] || product.thumbnail}
+                alt={product.title}
+                onError={e => { e.target.src = product.thumbnail }}
               />
+              {outOfStock && (
+                <div className={styles.soldOutOverlay}>Out of Stock</div>
+              )}
             </div>
+            {images.length > 1 && (
+              <div className={styles.thumbs}>
+                {images.map((src, i) => (
+                  <button
+                    key={i}
+                    className={`${styles.thumb} ${i === activeImg ? styles.thumbActive : ''}`}
+                    onClick={() => setActiveImg(i)}
+                  >
+                    <img src={src} alt={`View ${i + 1}`} onError={e => { e.target.src = product.thumbnail }} />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Details */}
-          <div className={styles.details}>
-            <p className={styles.category}>{product?.category}</p>
-            <h1 className={styles.name}>{product?.name}</h1>
+          {/* Info */}
+          <div className={styles.info}>
+            <div className={styles.topMeta}>
+              <span className={styles.category}>{product.category}</span>
+              {product?.brand && <span className={styles.brand}>by {product.brand}</span>}
+            </div>
 
-            {product?.meta?.rating && (
-              <div className={styles.ratingRow}>
-                <StarRating rating={product.meta.rating} />
-                <span className={styles.ratingText}>
-                  {product.meta.rating} out of 5
-                </span>
-              </div>
-            )}
+            <h1 className={styles.title}>{product.title}</h1>
 
-            <p className={styles.price}>{formatPrice(product?.price)}</p>
+            <div className={styles.ratingRow}>
+              <StarRating rating={product.rating ?? 0} />
+              <span className={styles.ratingCount}>({Math.floor((product.rating ?? 0) * 20)} reviews)</span>
+            </div>
 
-            <div className={styles.metaRow}>
-              {product?.meta?.brand && (
-                <span className={styles.metaChip}>
-                  <Tag size={12} /> {product.meta.brand}
-                </span>
+            <div className={styles.priceRow}>
+              <span className={styles.price}>{formatPrice(product.price)}</span>
+              {product.discountPercentage > 0 && (
+                <>
+                  <span className={styles.originalPrice}>
+                    {formatPrice(product.price / (1 - product.discountPercentage / 100))}
+                  </span>
+                  <Badge variant="gold">-{Math.round(product.discountPercentage)}%</Badge>
+                </>
               )}
-              <span className={styles.metaChip}>
-                <Package size={12} />
-                {product?.meta?.total_stock > 0
-                  ? `${product.meta.total_stock} in stock`
-                  : "Out of stock"}
-              </span>
             </div>
 
-            <p className={styles.description}>{product?.description}</p>
+            <p className={styles.description}>{product.description}</p>
 
-            {/* Colour selector */}
-            {variants.length > 0 && (
-              <div className={styles.selectorGroup}>
-                <p className={styles.selectorLabel}>
-                  Colour{" "}
-                  {selectedColor && (
-                    <span className={styles.selectorValue}>
-                      — {selectedColor}
-                    </span>
-                  )}
-                </p>
-                <div className={styles.colorOptions}>
-                  {variants.map((v) => (
-                    <button
-                      key={v.color}
-                      onClick={() => handleColorSelect(v.color)}
-                      className={`${styles.colorBtn} ${selectedColor === v.color ? styles.colorActive : ""}`}
-                      title={v.color}
-                      style={{ "--swatch": v.color.toLowerCase() }}
-                    >
-                      <span
-                        className={styles.swatch}
-                        style={{ background: v.color.toLowerCase() }}
-                      />
-                      <span className={styles.colorName}>{v.color}</span>
-                    </button>
-                  ))}
+            {/* Stock */}
+            <div className={styles.stockRow}>
+              <Package size={15} />
+              {outOfStock ? (
+                <span className={styles.outOfStock}>Out of stock</span>
+              ) : lowStock ? (
+                <span className={styles.lowStock}>Only {product.stock} left — order soon</span>
+              ) : (
+                <span className={styles.inStock}>{product.stock} in stock</span>
+              )}
+            </div>
+
+            {/* Qty + Add */}
+            {!outOfStock && (
+              <div className={styles.addRow}>
+                <div className={styles.qtyControl}>
+                  <button
+                    className={styles.qtyBtn}
+                    onClick={() => setQty(q => Math.max(1, q - 1))}
+                    disabled={qty <= 1}
+                    aria-label="Decrease quantity"
+                  >
+                    <Minus size={14} />
+                  </button>
+                  <span className={styles.qtyVal}>{qty}</span>
+                  <button
+                    className={styles.qtyBtn}
+                    onClick={() => setQty(q => Math.min(product.stock, q + 1))}
+                    disabled={qty >= product.stock}
+                    aria-label="Increase quantity"
+                  >
+                    <Plus size={14} />
+                  </button>
                 </div>
+
+                <button
+                  className={`${styles.addBtn} ${added ? styles.addedBtn : ''}`}
+                  onClick={handleAdd}
+                >
+                  <ShoppingBag size={18} />
+                  {added ? 'Added to Cart!' : 'Add to Cart'}
+                </button>
               </div>
             )}
 
-            {/* Size selector — only after colour chosen */}
-            {selectedColor && selectedVariant && (
-              <div className={styles.selectorGroup}>
-                <p className={styles.selectorLabel}>Size</p>
-                <div className={styles.sizeOptions}>
-                  {selectedVariant.sizes.map((s) => (
-                    <button
-                      key={s.sku}
-                      disabled={s.stock === 0}
-                      onClick={() => handleSizeSelect(s.size)}
-                      className={`${styles.sizeBtn} ${selectedSize === s.size ? styles.sizeActive : ""} ${s.stock === 0 ? styles.sizeOos : ""}`}
-                    >
-                      {s.size}
-                      {s.stock === 0 && <span className={styles.oosLine} />}
-                    </button>
-                  ))}
-                </div>
-                {selectedSku && (
-                  <p className={styles.stockNote}>
-                    {selectedSku.stock > 0
-                      ? `${selectedSku.stock} unit${selectedSku.stock !== 1 ? "s" : ""} available`
-                      : "Out of stock"}
-                  </p>
-                )}
+            {/* Perks */}
+            <div className={styles.perks}>
+              <div className={styles.perk}>
+                <Shield size={14} />
+                <span>Secure checkout</span>
               </div>
-            )}
-
-            {/* Quantity */}
-            <div className={styles.selectorGroup}>
-              <p className={styles.selectorLabel}>Quantity</p>
-              <div className={styles.qtyControl}>
-                <button
-                  onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  disabled={qty <= 1}
-                  className={styles.qtyBtn}
-                >
-                  <Minus size={14} />
-                </button>
-                <span className={styles.qtyDisplay}>{qty}</span>
-                <button
-                  onClick={() => setQty((q) => Math.min(maxQty || 99, q + 1))}
-                  disabled={selectedSku ? qty >= selectedSku.stock : false}
-                  className={styles.qtyBtn}
-                >
-                  <Plus size={14} />
-                </button>
+              <div className={styles.perk}>
+                <Star size={14} />
+                <span>Rated {product.rating?.toFixed(1)} / 5</span>
+              </div>
+              <div className={styles.perk}>
+                <Package size={14} />
+                <span>Free shipping over $100</span>
               </div>
             </div>
-
-            {/* Warning */}
-            {warn && <p className={styles.warn}>{warn}</p>}
-
-            {/* Add to cart */}
-            <button
-              onClick={handleAddToCart}
-              className={`${styles.addBtn} ${added ? styles.addedBtn : ""}`}
-            >
-              <ShoppingBag size={18} />
-              {added ? "Added to Cart!" : "Add to Cart"}
-            </button>
           </div>
         </div>
 
-        {/* Related products */}
+        {/* ── Related products ── */}
         {related.length > 0 && (
           <section className={styles.related}>
-            <h2 className={styles.relatedTitle}>You might also like</h2>
+            <h2 className={styles.relatedTitle}>You may also like</h2>
             <div className={styles.relatedGrid}>
-              {related.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
+              {related.map(p => <ProductCard key={p.id} product={p} />)}
             </div>
           </section>
         )}
       </div>
     </div>
-  );
+  )
 }

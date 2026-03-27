@@ -1,195 +1,145 @@
 .page {
-  padding: var(--space-2xl) 0 var(--space-3xl);
+  padding: var(--space-10) 0 var(--space-20);
+  background: var(--color-tertiary-100);
   min-height: 80vh;
+  animation: fadeIn 300ms ease;
 }
-
 .container {
   max-width: 760px;
   margin: 0 auto;
-  padding: 0 var(--space-xl);
+  padding: 0 var(--space-8);
 }
-
-.back {
+.backBtn {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
-  font-size: 0.8rem;
-  color: var(--color-secondary-500);
+  gap: var(--space-2);
+  font-size: 0.825rem;
+  color: var(--color-secondary-400);
+  margin-bottom: var(--space-8);
   transition: color var(--transition-fast);
-  margin-bottom: var(--space-xl);
 }
+.backBtn:hover { color: var(--color-secondary-900); }
 
-.back:hover { color: var(--color-primary-600); }
-
-.thumbnail {
-  aspect-ratio: 16/6;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--color-tertiary-200);
-  margin-bottom: var(--space-xl);
-}
-
-.thumbImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.article {
+  background: var(--color-tertiary-50);
+  border: 1px solid var(--color-tertiary-300);
+  border-radius: var(--radius-xl);
+  padding: var(--space-12);
 }
 
 .tags {
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-2);
   flex-wrap: wrap;
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-5);
 }
-
 .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-primary-700);
-  background: var(--color-primary-100);
+  color: var(--color-primary-600);
+  background: var(--color-primary-50);
+  border: 1px solid var(--color-primary-200);
   padding: 3px 10px;
   border-radius: var(--radius-full);
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.15;
   color: var(--color-secondary-900);
-  line-height: 1.2;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-5);
+  letter-spacing: -0.01em;
 }
 
 .meta {
   display: flex;
   align-items: center;
+  gap: var(--space-3);
   flex-wrap: wrap;
-  gap: var(--space-sm);
-  font-size: 0.8rem;
+}
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.825rem;
   color: var(--color-secondary-400);
-  padding-bottom: var(--space-xl);
-  margin-bottom: var(--space-xl);
-  border-bottom: 1px solid var(--color-tertiary-300);
+}
+.dot { color: var(--color-secondary-200); }
+
+.divider {
+  height: 1px;
+  background: var(--color-tertiary-300);
+  margin: var(--space-8) 0;
 }
 
-.author { color: var(--color-secondary-600); }
-.author strong { color: var(--color-secondary-800); }
-
-.sep { color: var(--color-tertiary-400); }
-
-.date {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.content {
+.body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-5);
 }
-
-.content p {
-  font-size: 1rem;
-  line-height: 1.8;
+.body p {
+  font-size: 1.0625rem;
+  line-height: 1.85;
   color: var(--color-secondary-600);
 }
 
-/* Comments */
-.comments {
-  margin-top: var(--space-3xl);
-  padding-top: var(--space-2xl);
-  border-top: 1px solid var(--color-tertiary-300);
-}
-
-.commentsTitle {
+.reactions {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 400;
-  color: var(--color-secondary-800);
-  margin-bottom: var(--space-xl);
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
 }
-
-.commentList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-}
-
-.comment {
-  display: flex;
-  gap: var(--space-md);
-  background: var(--color-tertiary-100);
-  border: 1px solid var(--color-tertiary-200);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
-}
-
-.commentAvatar {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: var(--color-primary-200);
-  color: var(--color-primary-800);
-  font-weight: 700;
-  font-size: 0.9rem;
+.reactionGroup {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--space-3);
 }
-
-.commentBody {
-  flex: 1;
+.reactionBtn {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.commentUser {
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
   font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-secondary-700);
+  font-weight: 500;
+  border: 1px solid var(--color-tertiary-300);
+  transition: all var(--transition-fast);
 }
-
-.commentText {
-  font-size: 0.875rem;
-  color: var(--color-secondary-500);
-  line-height: 1.6;
-}
-
-.commentLikes {
+.like { color: #166534; }
+.like:hover { background: var(--color-success-100); border-color: #86efac; }
+.dislike { color: var(--color-secondary-400); }
+.dislike:hover { background: var(--color-error-100); border-color: #fca5a5; color: #991b1b; }
+.views {
   display: flex;
   align-items: center;
-  gap: 3px;
-  font-size: 0.75rem;
+  gap: var(--space-2);
+  font-size: 0.825rem;
   color: var(--color-secondary-400);
-  margin-top: var(--space-xs);
 }
 
 .backBottom {
-  margin-top: var(--space-3xl);
-  padding-top: var(--space-xl);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
   border-top: 1px solid var(--color-tertiary-300);
 }
-
 .backLink {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-primary-600);
-  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+  color: var(--color-secondary-400);
   transition: color var(--transition-fast);
 }
+.backLink:hover { color: var(--color-secondary-900); }
 
-.backLink:hover { color: var(--color-primary-500); }
+@media (max-width: 600px) {
+  .container { padding: 0 var(--space-4); }
+  .article { padding: var(--space-6); }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

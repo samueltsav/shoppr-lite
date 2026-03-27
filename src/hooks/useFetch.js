@@ -1,39 +1,39 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
+/**
+ * Generic data-fetching hook.
+ * Handles loading, error, and success states.
+ * Aborts in-flight requests when the URL changes or the component unmounts.
+ */
 export function useFetch(url) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    if (!url) return;
+    if (!url) return
 
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
+    const controller = new AbortController()
+    setLoading(true)
+    setError(null)
 
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
+    fetch(url, { signal: controller.signal })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`)
+        return res.json()
       })
-      .then((json) => {
-        if (!cancelled) {
-          setData(json);
-          setLoading(false);
-        }
+      .then(json => {
+        setData(json)
+        setLoading(false)
       })
-      .catch((err) => {
-        if (!cancelled) {
-          setError(err.message || "Something went wrong");
-          setLoading(false);
-        }
-      });
+      .catch(err => {
+        if (err.name === 'AbortError') return
+        setError(err.message || 'Something went wrong')
+        setLoading(false)
+      })
 
-    return () => {
-      cancelled = true;
-    };
-  }, [url]);
+    return () => controller.abort()
+  }, [url])
 
-  return { data, loading, error };
+  return { data, loading, error }
 }

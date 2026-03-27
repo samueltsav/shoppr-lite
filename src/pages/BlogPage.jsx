@@ -1,75 +1,73 @@
-import { useState, useMemo } from "react";
-import { Search } from "lucide-react";
-import { useFetch } from "../hooks/useFetch";
-import { API_BASE } from "../utils/helpers";
-import BlogCard from "../components/BlogCard";
-import Spinner from "../components/ui/Spinner";
-import ErrorMessage from "../components/ui/ErrorMessage";
-import styles from "./BlogPage.module.css";
+import { useMemo, useState } from 'react'
+import { Search } from 'lucide-react'
+import { useFetch } from '../hooks/useFetch.js'
+import { API_BASE } from '../utils/constants.js'
+import BlogCard from '../components/blog/BlogCard.jsx'
+import Spinner from '../components/ui/Spinner.jsx'
+import ErrorMessage from '../components/ui/ErrorMessage.jsx'
+import EmptyState from '../components/ui/EmptyState.jsx'
+import styles from './BlogPage.module.css'
 
 export default function BlogPage() {
-  const { data: posts, loading, error } = useFetch(`${API_BASE}/blogs`);
-  const [q, setQ] = useState("");
+  const { data, loading, error } = useFetch(`${API_BASE}/posts?limit=30`)
+  const [q, setQ] = useState('')
 
-  const filtered = useMemo(() => {
-    if (!posts) return [];
-    if (!q.trim()) return posts;
-    const term = q.toLowerCase();
-    return posts.filter(
-      (p) =>
-        p.title.toLowerCase().includes(term) ||
-        p.author.toLowerCase().includes(term) ||
-        p.meta?.tags?.some((t) => t.toLowerCase().includes(term)),
-    );
-  }, [posts, q]);
+  const posts = useMemo(() => {
+    const all = data?.posts ?? []
+    if (!q) return all
+    const term = q.toLowerCase()
+    return all.filter(
+      p => p.title?.toLowerCase().includes(term) ||
+           p.body?.toLowerCase().includes(term) ||
+           p.tags?.some(t => t.toLowerCase().includes(term))
+    )
+  }, [data, q])
 
   return (
     <div className={styles.page}>
-      {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerInner}>
           <div>
-            <p className={styles.eyebrow}>From our journal</p>
-            <h1 className={styles.title}>Blog</h1>
+            <h1 className={styles.title}>The Shoppr Journal</h1>
+            <p className={styles.sub}>Stories, ideas, and inspiration from our community</p>
           </div>
-          <div className={styles.search}>
-            <Search size={15} className={styles.searchIcon} />
+          <div className={styles.searchWrap}>
+            <Search size={16} className={styles.searchIcon} />
             <input
-              type="text"
-              placeholder="Search articles…"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
               className={styles.searchInput}
+              type="search"
+              placeholder="Search posts…"
+              value={q}
+              onChange={e => setQ(e.target.value)}
+              aria-label="Search posts"
             />
           </div>
         </div>
       </div>
 
       <div className={styles.container}>
-        {loading && <Spinner text="Loading articles…" />}
+        {loading && <Spinner fullPage />}
         {error && <ErrorMessage message={error} />}
-
-        {!loading && !error && filtered.length === 0 && (
-          <div className={styles.empty}>
-            <p className={styles.emptyIcon}>📰</p>
-            <h3 className={styles.emptyTitle}>No articles found</h3>
-            <p className={styles.emptySub}>Try a different search term.</p>
-          </div>
+        {!loading && !error && posts.length === 0 && (
+          <EmptyState
+            title="No posts found"
+            message={`Nothing matched "${q}". Try a different search term.`}
+            action={<button className={styles.clearBtn} onClick={() => setQ('')}>Clear search</button>}
+          />
         )}
-
-        {!loading && !error && filtered.length > 0 && (
+        {!loading && !error && posts.length > 0 && (
           <>
-            <p className={styles.count}>
-              {filtered.length} article{filtered.length !== 1 ? "s" : ""}
-            </p>
+            <p className={styles.count}>{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
             <div className={styles.grid}>
-              {filtered.map((p) => (
-                <BlogCard key={p.id} post={p} />
+              {posts.map((post, i) => (
+                <div key={post.id} style={{ animationDelay: `${Math.min(i * 40, 400)}ms` }}>
+                  <BlogCard post={post} />
+                </div>
               ))}
             </div>
           </>
         )}
       </div>
     </div>
-  );
+  )
 }

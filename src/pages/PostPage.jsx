@@ -1,108 +1,89 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Eye, Heart, MessageCircle, Clock } from "lucide-react";
-import { useFetch } from "../hooks/useFetch";
-import { API_BASE, formatDate } from "../utils/helpers";
-import Spinner from "../components/ui/Spinner";
-import ErrorMessage from "../components/ui/ErrorMessage";
-import styles from "./PostPage.module.css";
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Clock, Eye, ThumbsUp, ThumbsDown, Tag } from 'lucide-react'
+import { useFetch } from '../hooks/useFetch.js'
+import { API_BASE } from '../utils/constants.js'
+import { readingTime, syntheticDate } from '../utils/helpers.js'
+import Spinner from '../components/ui/Spinner.jsx'
+import ErrorMessage from '../components/ui/ErrorMessage.jsx'
+import styles from './PostPage.module.css'
 
 export default function PostPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { data: post, loading, error } = useFetch(`${API_BASE}/blogs/${id}`);
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { data: post, loading, error } = useFetch(`${API_BASE}/posts/${id}`)
 
-  if (loading) return <Spinner text="Loading article…" />;
-  if (error) return <ErrorMessage message={error} />;
+  if (loading) return <Spinner fullPage />
+  if (error) return <ErrorMessage message={error} />
+  if (!post) return null
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* Back */}
-        <button onClick={() => navigate(-1)} className={styles.back}>
-          <ArrowLeft size={15} /> Back to Blog
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          <ArrowLeft size={16} /> Back to Journal
         </button>
 
-        {/* Thumbnail */}
-        {post?.thumbnail && (
-          <div className={styles.thumbnail}>
-            <img
-              src={post.thumbnail}
-              alt={post.title}
-              className={styles.thumbImg}
-            />
+        <article className={styles.article}>
+          {/* Tags */}
+          <div className={styles.tags}>
+            {post.tags?.map(tag => (
+              <span key={tag} className={styles.tag}>
+                <Tag size={11} /> {tag}
+              </span>
+            ))}
           </div>
-        )}
 
-        {/* Tags */}
-        <div className={styles.tags}>
-          {post?.meta?.tags?.map((tag) => (
-            <span key={tag} className={styles.tag}>
-              {tag}
+          <h1 className={styles.title}>{post.title}</h1>
+
+          {/* Meta */}
+          <div className={styles.meta}>
+            <span className={styles.metaItem}>
+              Author #{post.userId}
             </span>
-          ))}
-        </div>
+            <span className={styles.dot}>·</span>
+            <span className={styles.metaItem}>
+              <Clock size={13} /> {readingTime(post.body)}
+            </span>
+            <span className={styles.dot}>·</span>
+            <span className={styles.metaItem}>{syntheticDate(post.id)}</span>
+          </div>
 
-        {/* Title */}
-        <h1 className={styles.title}>{post?.title}</h1>
+          <div className={styles.divider} />
 
-        {/* Meta */}
-        <div className={styles.meta}>
-          <span className={styles.author}>
-            By <strong>{post?.author}</strong>
-          </span>
-          <span className={styles.sep}>·</span>
-          <span className={styles.date}>
-            <Clock size={13} />{" "}
-            {post?.publishedAt ? formatDate(post.publishedAt) : ""}
-          </span>
-          <span className={styles.sep}>·</span>
-          <span className={styles.stat}>
-            <Eye size={13} /> {post?.meta?.views ?? 0} views
-          </span>
-          <span className={styles.stat}>
-            <Heart size={13} /> {post?.meta?.likes ?? 0} likes
-          </span>
-        </div>
+          {/* Body */}
+          <div className={styles.body}>
+            {post.body?.split('\n').map((para, i) =>
+              para.trim() ? <p key={i}>{para}</p> : null
+            )}
+          </div>
 
-        {/* Content */}
-        <div className={styles.content}>
-          {post?.content
-            ?.split("\n")
-            .map((para, i) => (para.trim() ? <p key={i}>{para}</p> : null))}
-        </div>
+          <div className={styles.divider} />
 
-        {/* Comments */}
-        {post?.meta?.comments?.length > 0 && (
-          <section className={styles.comments}>
-            <h2 className={styles.commentsTitle}>
-              <MessageCircle size={18} />
-              Comments ({post.meta.comments.length})
-            </h2>
-            <div className={styles.commentList}>
-              {post.meta.comments.map((c) => (
-                <div key={c.id} className={styles.comment}>
-                  <div className={styles.commentAvatar}>
-                    {c.user?.charAt(0).toUpperCase()}
-                  </div>
-                  <div className={styles.commentBody}>
-                    <p className={styles.commentUser}>{c.user}</p>
-                    <p className={styles.commentText}>{c.text}</p>
-                    <span className={styles.commentLikes}>
-                      <Heart size={11} /> {c.likes}
-                    </span>
-                  </div>
-                </div>
-              ))}
+          {/* Reactions */}
+          <div className={styles.reactions}>
+            <div className={styles.reactionGroup}>
+              <button className={`${styles.reactionBtn} ${styles.like}`}>
+                <ThumbsUp size={16} />
+                <span>{post.reactions?.likes?.toLocaleString()} Likes</span>
+              </button>
+              <button className={`${styles.reactionBtn} ${styles.dislike}`}>
+                <ThumbsDown size={16} />
+                <span>{post.reactions?.dislikes?.toLocaleString()}</span>
+              </button>
             </div>
-          </section>
-        )}
+            <div className={styles.views}>
+              <Eye size={14} />
+              {post.views?.toLocaleString()} views
+            </div>
+          </div>
+        </article>
 
         <div className={styles.backBottom}>
           <Link to="/blog" className={styles.backLink}>
-            ← All Articles
+            ← All posts
           </Link>
         </div>
       </div>
     </div>
-  );
+  )
 }

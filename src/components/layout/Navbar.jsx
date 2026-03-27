@@ -1,75 +1,83 @@
-import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
-import { ShoppingBag, Menu, X } from "lucide-react";
-import { useCart } from "../../context/CartContext";
-import styles from "./Navbar.module.css";
+import { useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+import { ShoppingBag, Menu, X } from 'lucide-react'
+import { useCart } from '../../context/CartContext.jsx'
+import styles from './Navbar.module.css'
+
+const NAV_LINKS = [
+  { to: '/', label: 'Home', end: true },
+  { to: '/shop', label: 'Shop' },
+  { to: '/blog', label: 'Journal' },
+]
 
 export default function Navbar() {
-  const { itemCount } = useCart();
-  const [open, setOpen] = useState(false);
+  const { itemCount } = useCart()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
-  const navLinkClass = ({ isActive }) =>
-    `${styles.link} ${isActive ? styles.active : ""}`;
+  const getLinkClass = ({ isActive }) =>
+    `${styles.link} ${isActive ? styles.linkActive : ''}`
 
   return (
-    <nav className={styles.nav}>
-      <div className={styles.inner}>
-        <Link to="/" className={styles.logo}>
-          Shoppr<span>-Lite</span>
-        </Link>
+    <>
+      <nav className={styles.nav}>
+        <div className={styles.inner}>
+          <Link to="/" className={styles.logo}>
+            Shoppr<span>Lite</span>
+          </Link>
 
-        <div className={`${styles.links} ${open ? styles.open : ""}`}>
-          <NavLink
-            to="/"
-            end
-            className={navLinkClass}
-            onClick={() => setOpen(false)}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/shop"
-            className={navLinkClass}
-            onClick={() => setOpen(false)}
-          >
-            Shop
-          </NavLink>
-          <NavLink
-            to="/blog"
-            className={navLinkClass}
-            onClick={() => setOpen(false)}
-          >
-            Blog
-          </NavLink>
+          <ul className={styles.links}>
+            {NAV_LINKS.map(({ to, label, end }) => (
+              <li key={to}>
+                <NavLink to={to} end={end} className={getLinkClass}>
+                  {label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Link to="/cart" className={styles.cartBtn}>
+              <ShoppingBag size={16} />
+              <span className={styles.cartLabel}>Cart</span>
+              {itemCount > 0 && (
+                <span className={styles.cartCount}>{itemCount}</span>
+              )}
+            </Link>
+
+            <button
+              className={styles.mobileMenuBtn}
+              onClick={() => setMobileOpen(o => !o)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
+      </nav>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space-md)",
-          }}
-        >
+      {/* Mobile menu */}
+      <div className={`${styles.mobileMenu} ${mobileOpen ? styles.open : ''}`}>
+        {NAV_LINKS.map(({ to, label, end }) => (
           <NavLink
-            to="/cart"
+            key={to}
+            to={to}
+            end={end}
             className={({ isActive }) =>
-              `${styles.cartBtn} ${isActive ? styles.activeCart : ""}`
+              `${styles.mobileLink} ${isActive ? styles.mobileLinkActive : ''}`
             }
+            onClick={() => setMobileOpen(false)}
           >
-            <ShoppingBag size={16} />
-            <span>Cart</span>
-            {itemCount > 0 && <span className={styles.badge}>{itemCount}</span>}
+            {label}
           </NavLink>
-
-          <button
-            className={styles.menuBtn}
-            onClick={() => setOpen((o) => !o)}
-            aria-label="Toggle menu"
-          >
-            {open ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </div>
+        ))}
+        <Link
+          to="/cart"
+          className={styles.mobileLink}
+          onClick={() => setMobileOpen(false)}
+        >
+          Cart {itemCount > 0 && `(${itemCount})`}
+        </Link>
       </div>
-    </nav>
-  );
+    </>
+  )
 }

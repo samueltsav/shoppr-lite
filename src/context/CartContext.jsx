@@ -1,58 +1,71 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useCallback, useReducer } from 'react'
 
 const CartContext = createContext(null)
 
-export function CartProvider({ children }) {
-  const [items, setItems] = useState([])
+// ─── Reducer ────────────────────────────────────────────────────────────────
 
-  const addItem = useCallback((product, color, size, sku, qty) => {
-    setItems(prev => {
-      const existing = prev.find(i => i.sku === sku)
+function cartReducer(state, action) {
+  switch (action.type) {
+    case 'ADD_ITEM': {
+      const { product, qty } = action.payload
+      const existing = state.find(item => item.id === product.id)
       if (existing) {
-        return prev.map(i =>
-          i.sku === sku ? { ...i, qty: i.qty + qty } : i
+        return state.map(item =>
+          item.id === product.id
+            ? { ...item, qty: Math.min(item.qty + qty, product.stock) }
+            : item
         )
       }
-      return [
-        ...prev,
-        {
-          id:      product.id,
-          sku,
-          name:    product.name,
-          image:   product.image,
-          price:   Number(product.price), // coerce at the boundary
-          color,
-          size,
-          qty,
-        },
-      ]
-    })
+      return [...state, { ...product, qty }]
+    }
+    case 'UPDATE_QTY': {
+      const { id, qty } = action.payload
+      if (qty < 1) return state.filter(item => item.id !== id)
+      return state.map(item => (item.id === id ? { ...item, qty } : item))
+    }
+    case 'REMOVE_ITEM':
+      return state.filter(item => item.id !== action.payload)
+    case 'CLEAR_CART':
+      return []
+    default:
+      return state
+  }
+}
+
+// ─── Provider ───────────────────────────────────────────────────────────────
+
+export function CartProvider({ children }) {
+  const [items, dispatch] = useReducer(cartReducer, [])
+
+  const addItem = useCallback((product, qty = 1) => {
+    dispatch({ type: 'ADD_ITEM', payload: { product, qty } })
   }, [])
 
-  const removeItem = useCallback((sku) => {
-    setItems(prev => prev.filter(i => i.sku !== sku))
+  const updateQty = useCallback((id, qty) => {
+    dispatch({ type: 'UPDATE_QTY', payload: { id, qty } })
   }, [])
 
-  const updateQty = useCallback((sku, qty) => {
-    if (qty < 1) return
-    setItems(prev => prev.map(i => i.sku === sku ? { ...i, qty } : i))
+  const removeItem = useCallback((id) => {
+    dispatch({ type: 'REMOVE_ITEM', payload: id })
   }, [])
 
   const clearCart = useCallback(() => {
-    setItems([])
+    dispatch({ type: 'CLEAR_CART' })
   }, [])
 
-  const itemCount = items.reduce((sum, i) => sum + i.qty, 0)
+  const itemCount = items.reduce((sum, item) => sum + item.qty, 0)
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQty, clearCart, itemCount }}>
+    <CartContext.Provider value={{ items, itemCount, addItem, updateQty, removeItem, clearCart }}>
       {children}
     </CartContext.Provider>
   )
 }
 
+// ─── Custom hook ────────────────────────────────────────────────────────────
+
 export function useCart() {
   const ctx = useContext(CartContext)
-  if (!ctx) throw new Error('useCart must be used inside CartProvider')
+  if (!ctx) throw new Error('useCart must be used within CartProvider')
   return ctx
 }

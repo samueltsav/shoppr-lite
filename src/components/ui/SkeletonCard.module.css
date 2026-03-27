@@ -1,0 +1,38 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-6);
+}
+.card {
+  background: var(--color-tertiary-50);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-tertiary-300);
+}
+.image {
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(90deg,
+    var(--color-tertiary-200) 25%,
+    var(--color-tertiary-100) 50%,
+    var(--color-tertiary-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+.body { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); }
+.line {
+  height: 14px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg,
+    var(--color-tertiary-200) 25%,
+    var(--color-tertiary-100) 50%,
+    var(--color-tertiary-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
