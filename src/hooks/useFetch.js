@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react"
 
 /**
- * Generic data-fetching hook.
+ * Data-fetching hook.
  * Handles loading, error, and success states.
- * Aborts in-flight requests when the URL changes or the component unmounts.
- */
+*/
 export function useFetch(url) {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -27,8 +26,8 @@ export function useFetch(url) {
         setLoading(false)
       })
       .catch(err => {
-        if (err.name === 'AbortError') return
-        setError(err.message || 'Something went wrong')
+        if (err.name === "AbortError") return
+        setError(err.message || "Something went wrong")
         setLoading(false)
       })
 

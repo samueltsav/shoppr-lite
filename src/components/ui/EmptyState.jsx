@@ -1,4 +1,4 @@
-import styles from './EmptyState.module.css'
+import styles from "./EmptyState.module.css"
 
 export default function EmptyState({ icon, title, message, action }) {
   return (

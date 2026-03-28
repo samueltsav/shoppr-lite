@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import { Clock, Eye, ThumbsUp } from 'lucide-react'
-import { truncate, readingTime, syntheticDate } from '../../utils/helpers.js'
-import styles from './BlogCard.module.css'
+import { Link } from "react-router-dom"
+import { Clock, Eye, ThumbsUp } from "lucide-react"
+import { truncate, readingTime, syntheticDate } from "../../utils/helpers.js"
+import styles from "./BlogCard.module.css"
 
 export default function BlogCard({ post }) {
   return (

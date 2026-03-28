@@ -1,6 +1,4 @@
-/* ============================================
-   SHOPPR — Global Styles & Design Tokens
-   ============================================ */
+/* BASE CSS */
 
 *, *::before, *::after {
   box-sizing: border-box;

@@ -1,7 +1,7 @@
-import { AlertCircle, RefreshCw } from 'lucide-react'
-import styles from './ErrorMessage.module.css'
+import { AlertCircle, RefreshCw } from "lucide-react"
+import styles from "./ErrorMessage.module.css"
 
-export default function ErrorMessage({ message = 'Something went wrong.', onRetry }) {
+export default function ErrorMessage({ message = "Something went wrong.", onRetry }) {
   return (
     <div className={styles.wrapper}>
       <AlertCircle size={40} className={styles.icon} />

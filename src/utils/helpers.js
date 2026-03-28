@@ -1,10 +1,10 @@
 /**
- * Format a number as USD currency string
+ * Format currency 
  */
 export function formatPrice(amount) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
   }).format(amount)
 }
 
@@ -12,16 +12,16 @@ export function formatPrice(amount) {
  * Truncate text to a given character limit, appending ellipsis
  */
 export function truncate(text, limit = 120) {
-  if (!text) return ''
+  if (!text) return ""
   if (text.length <= limit) return text
-  return text.slice(0, limit).trimEnd() + '…'
+  return text.slice(0, limit).trimEnd() + "…"
 }
 
 /**
  * Estimate reading time from text content
  */
 export function readingTime(text) {
-  if (!text) return '1 min read'
+  if (!text) return "1 min read"
   const words = text.trim().split(/\s+/).length
   const mins = Math.max(1, Math.round(words / 200))
   return `${mins} min read`
@@ -31,9 +31,9 @@ export function readingTime(text) {
  * Generate a synthetic date offset by post ID (for display purposes)
  */
 export function syntheticDate(id) {
-  const base = new Date('2025-01-01')
+  const base = new Date("2025-01-01")
   base.setDate(base.getDate() + (id % 180))
-  return base.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  return base.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
 }
 
 /**

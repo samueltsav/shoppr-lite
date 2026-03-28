@@ -1,26 +1,26 @@
-import { useMemo, useCallback } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
-import { useFetch } from '../hooks/useFetch.js'
-import { API_BASE, CATEGORIES, SORT_OPTIONS } from '../utils/constants.js'
-import ProductGrid from '../components/product/ProductGrid.jsx'
-import { SkeletonGrid } from '../components/ui/SkeletonCard.jsx'
-import ErrorMessage from '../components/ui/ErrorMessage.jsx'
-import EmptyState from '../components/ui/EmptyState.jsx'
-import styles from './ShopPage.module.css'
+import { useMemo, useCallback } from "react"
+import { useSearchParams } from "react-router-dom"
+import { Search, SlidersHorizontal, X } from "lucide-react"
+import { useFetch } from "../hooks/useFetch.js"
+import { API_BASE, CATEGORIES, SORT_OPTIONS } from "../utils/constants.js"
+import ProductGrid from "../components/product/ProductGrid.jsx"
+import { SkeletonGrid } from "../components/ui/SkeletonCard.jsx"
+import ErrorMessage from "../components/ui/ErrorMessage.jsx"
+import EmptyState from "../components/ui/EmptyState.jsx"
+import styles from "./ShopPage.module.css"
 
 export default function ShopPage() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const q = searchParams.get('q') || ''
-  const cat = searchParams.get('cat') || 'all'
-  const sort = searchParams.get('sort') || 'featured'
+  const q = searchParams.get("q") || ""
+  const cat = searchParams.get("cat") || "all"
+  const sort = searchParams.get("sort") || "featured"
 
   const { data, loading, error } = useFetch(`${API_BASE}/products?limit=100`)
 
   const setParam = useCallback((key, value) => {
     setSearchParams(prev => {
       const next = new URLSearchParams(prev)
-      if (!value || value === 'all' || value === 'featured') {
+      if (!value || value === "all" || value === "featured") {
         next.delete(key)
       } else {
         next.set(key, value)
@@ -33,7 +33,7 @@ export default function ShopPage() {
 
   const filtered = useMemo(() => {
     let products = data?.products ?? []
-    if (cat !== 'all') products = products.filter(p => p.category === cat)
+    if (cat !== "all") products = products.filter(p => p.category === cat)
     if (q) {
       const term = q.toLowerCase()
       products = products.filter(
@@ -42,15 +42,15 @@ export default function ShopPage() {
       )
     }
     switch (sort) {
-      case 'price-asc':  return [...products].sort((a, b) => a.price - b.price)
-      case 'price-desc': return [...products].sort((a, b) => b.price - a.price)
-      case 'rating-desc': return [...products].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
+      case "price-asc":  return [...products].sort((a, b) => a.price - b.price)
+      case "price-desc": return [...products].sort((a, b) => b.price - a.price)
+      case "rating-desc": return [...products].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
       default: return products
     }
   }, [data, cat, q, sort])
 
-  const hasFilters = q || cat !== 'all' || sort !== 'featured'
-  const activeCatLabel = CATEGORIES.find(c => c.value === cat)?.label ?? 'All'
+  const hasFilters = q || cat !== "all" || sort !== "featured"
+  const activeCatLabel = CATEGORIES.find(c => c.value === cat)?.label ?? "All"
 
   return (
     <div className={styles.page}>
@@ -59,10 +59,10 @@ export default function ShopPage() {
         <div className={styles.headerInner}>
           <div>
             <h1 className={styles.title}>
-              {cat !== 'all' ? activeCatLabel : 'All Products'}
+              {cat !== "all" ? activeCatLabel : "All Products"}
             </h1>
             <p className={styles.count}>
-              {loading ? '…' : `${filtered.length} product${filtered.length !== 1 ? 's' : ''}`}
+              {loading ? "…" : `${filtered.length} product${filtered.length !== 1 ? "s" : ""}`}
             </p>
           </div>
           {/* Search */}
@@ -73,7 +73,7 @@ export default function ShopPage() {
               type="search"
               placeholder="Search products…"
               value={q}
-              onChange={e => setParam('q', e.target.value)}
+              onChange={e => setParam("q", e.target.value)}
               aria-label="Search products"
             />
           </div>
@@ -102,7 +102,7 @@ export default function ShopPage() {
                     name="sort"
                     value={o.value}
                     checked={sort === o.value}
-                    onChange={() => setParam('sort', o.value)}
+                    onChange={() => setParam("sort", o.value)}
                     className={styles.radio}
                   />
                   {o.label}
@@ -116,8 +116,8 @@ export default function ShopPage() {
                 {CATEGORIES.map(c => (
                   <button
                     key={c.value}
-                    className={`${styles.catBtn} ${cat === c.value ? styles.catBtnActive : ''}`}
-                    onClick={() => setParam('cat', c.value)}
+                    className={`${styles.catBtn} ${cat === c.value ? styles.catBtnActive : ""}`}
+                    onClick={() => setParam("cat", c.value)}
                   >
                     {c.label}
                   </button>
@@ -134,7 +134,7 @@ export default function ShopPage() {
           {!loading && !error && filtered.length === 0 && (
             <EmptyState
               title="No products found"
-              message={`We couldn't find anything matching "${q || activeCatLabel}". Try adjusting your filters or searching for something else.`}
+              message={`We couldn"t find anything matching "${q || activeCatLabel}". Try adjusting your filters or searching for something else.`}
               action={<button className={styles.resetBtn} onClick={clearFilters}>Clear filters</button>}
             />
           )}

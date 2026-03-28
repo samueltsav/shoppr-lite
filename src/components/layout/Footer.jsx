@@ -6,10 +6,10 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.brand}>
-          <div className={styles.logo}>Shopp<span>r</span></div>
+          <div className={styles.logo}>Shoppr<span>Lite</span></div>
           <p>
-            Curated commerce for the discerning shopper. Quality products,
-            honest prices, and a seamless experience — every time.
+            We are reliable and second to none. Quality products,
+            honest prices, and a seamless shopping experience — every time.
           </p>
         </div>
 
@@ -46,8 +46,8 @@ export default function Footer() {
       </div>
 
       <div className={styles.bottom}>
-        <span>© {new Date().getFullYear()} Shoppr. All rights reserved.</span>
-        <span>Built with React · Powered by DummyJSON</span>
+        <span>© {new Date().getFullYear()} Shoppr-lite. All rights reserved.</span>
+        <span>Built with React | Powered by DummyJSON</span>
       </div>
     </footer>
   )

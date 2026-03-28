@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Trash2, ShoppingBag, Minus, Plus, X, ChevronRight, AlertTriangle } from 'lucide-react'
-import { useCart } from '../context/CartContext.jsx'
-import { formatPrice } from '../utils/helpers.js'
-import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST, TAX_RATE } from '../utils/constants.js'
-import EmptyState from '../components/ui/EmptyState.jsx'
-import styles from './CartPage.module.css'
+import { useMemo, useState } from "react"
+import { Link } from "react-router-dom"
+import { Trash2, ShoppingBag, Minus, Plus, X, ChevronRight, AlertTriangle } from "lucide-react"
+import { useCart } from "../context/CartContext.jsx"
+import { formatPrice } from "../utils/helpers.js"
+import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST, TAX_RATE } from "../utils/constants.js"
+import EmptyState from "../components/ui/EmptyState.jsx"
+import styles from "./CartPage.module.css"
 
 export default function CartPage() {
   const { items, updateQty, removeItem, clearCart } = useCart()
@@ -54,12 +54,12 @@ export default function CartPage() {
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Your Cart</h1>
           <button
-            className={`${styles.clearBtn} ${confirmClear ? styles.clearBtnConfirm : ''}`}
+            className={`${styles.clearBtn} ${confirmClear ? styles.clearBtnConfirm : ""}`}
             onClick={handleClear}
             onBlur={() => setConfirmClear(false)}
           >
             <AlertTriangle size={14} />
-            {confirmClear ? 'Confirm clear?' : 'Clear cart'}
+            {confirmClear ? "Confirm clear?" : "Clear cart"}
           </button>
         </div>
 
@@ -76,7 +76,7 @@ export default function CartPage() {
         )}
         {subtotal >= FREE_SHIPPING_THRESHOLD && subtotal > 0 && (
           <div className={`${styles.shippingBar} ${styles.shippingBarFree}`}>
-            🎉 You've unlocked free shipping!
+            🎉 You"ve unlocked free shipping!
           </div>
         )}
 
@@ -87,7 +87,7 @@ export default function CartPage() {
               <div key={item.id} className={styles.item}>
                 <Link to={`/shop/${item.id}`} className={styles.itemImg}>
                   <img
-                    src={imgErrors[item.id] ? 'https://placehold.co/80x80/f0ece5/b5a898?text=?' : item.thumbnail}
+                    src={imgErrors[item.id] ? "https://placehold.co/80x80/f0ece5/b5a898?text=?" : item.thumbnail}
                     alt={item.title}
                     onError={() => setImgErrors(e => ({ ...e, [item.id]: true }))}
                   />
@@ -138,8 +138,8 @@ export default function CartPage() {
               </div>
               <div className={styles.summaryRow}>
                 <span>Shipping</span>
-                <span className={shipping === 0 ? styles.free : ''}>
-                  {shipping === 0 ? 'Free' : formatPrice(shipping)}
+                <span className={shipping === 0 ? styles.free : ""}>
+                  {shipping === 0 ? "Free" : formatPrice(shipping)}
                 </span>
               </div>
               <div className={styles.summaryRow}>

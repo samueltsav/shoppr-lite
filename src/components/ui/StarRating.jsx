@@ -1,5 +1,5 @@
-import { Star } from 'lucide-react'
-import styles from './StarRating.module.css'
+import { Star } from "lucide-react"
+import styles from "./StarRating.module.css"
 
 export default function StarRating({ rating, showValue = true, size = 14 }) {
   const full = Math.floor(rating)
@@ -13,7 +13,7 @@ export default function StarRating({ rating, showValue = true, size = 14 }) {
           <Star key={`f${i}`} size={size} className={styles.full} fill="currentColor" />
         ))}
         {partial > 0 && (
-          <span className={styles.partialWrap} style={{ '--pct': `${partial * 100}%` }}>
+          <span className={styles.partialWrap} style={{ "--pct": `${partial * 100}%` }}>
             <Star size={size} className={styles.partialBack} fill="currentColor" />
             <Star size={size} className={styles.partialFront} fill="currentColor" />
           </span>

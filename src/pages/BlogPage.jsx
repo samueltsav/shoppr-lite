@@ -1,16 +1,16 @@
-import { useMemo, useState } from 'react'
-import { Search } from 'lucide-react'
-import { useFetch } from '../hooks/useFetch.js'
-import { API_BASE } from '../utils/constants.js'
-import BlogCard from '../components/blog/BlogCard.jsx'
-import Spinner from '../components/ui/Spinner.jsx'
-import ErrorMessage from '../components/ui/ErrorMessage.jsx'
-import EmptyState from '../components/ui/EmptyState.jsx'
-import styles from './BlogPage.module.css'
+import { useMemo, useState } from "react"
+import { Search } from "lucide-react"
+import { useFetch } from "../hooks/useFetch.js"
+import { API_BASE } from "../utils/constants.js"
+import BlogCard from "../components/blog/BlogCard.jsx"
+import Spinner from "../components/ui/Spinner.jsx"
+import ErrorMessage from "../components/ui/ErrorMessage.jsx"
+import EmptyState from "../components/ui/EmptyState.jsx"
+import styles from "./BlogPage.module.css"
 
 export default function BlogPage() {
   const { data, loading, error } = useFetch(`${API_BASE}/posts?limit=30`)
-  const [q, setQ] = useState('')
+  const [q, setQ] = useState("")
 
   const posts = useMemo(() => {
     const all = data?.posts ?? []
@@ -28,7 +28,7 @@ export default function BlogPage() {
       <div className={styles.header}>
         <div className={styles.headerInner}>
           <div>
-            <h1 className={styles.title}>The Shoppr Journal</h1>
+            <h1 className={styles.title}>Welcome To Our Journal</h1>
             <p className={styles.sub}>Stories, ideas, and inspiration from our community</p>
           </div>
           <div className={styles.searchWrap}>
@@ -52,12 +52,12 @@ export default function BlogPage() {
           <EmptyState
             title="No posts found"
             message={`Nothing matched "${q}". Try a different search term.`}
-            action={<button className={styles.clearBtn} onClick={() => setQ('')}>Clear search</button>}
+            action={<button className={styles.clearBtn} onClick={() => setQ("")}>Clear search</button>}
           />
         )}
         {!loading && !error && posts.length > 0 && (
           <>
-            <p className={styles.count}>{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
+            <p className={styles.count}>{posts.length} post{posts.length !== 1 ? "s" : ""}</p>
             <div className={styles.grid}>
               {posts.map((post, i) => (
                 <div key={post.id} style={{ animationDelay: `${Math.min(i * 40, 400)}ms` }}>

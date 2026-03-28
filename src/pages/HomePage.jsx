@@ -1,20 +1,20 @@
-import { useMemo } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowRight, ShoppingBag, Truck, RotateCcw, Star } from 'lucide-react'
-import { useFetch } from '../hooks/useFetch.js'
-import { API_BASE, CATEGORIES } from '../utils/constants.js'
-import ProductCard from '../components/product/ProductCard.jsx'
-import BlogCard from '../components/blog/BlogCard.jsx'
-import Spinner from '../components/ui/Spinner.jsx'
-import styles from './HomePage.module.css'
+import { useMemo } from "react"
+import { Link } from "react-router-dom"
+import { ArrowRight, ShoppingBag, Truck, RotateCcw, Star } from "lucide-react"
+import { useFetch } from "../hooks/useFetch.js"
+import { API_BASE, CATEGORIES } from "../utils/constants.js"
+import ProductCard from "../components/product/ProductCard.jsx"
+import BlogCard from "../components/blog/BlogCard.jsx"
+import Spinner from "../components/ui/Spinner.jsx"
+import styles from "./HomePage.module.css"
 
 const FEATURED_CATS = [
-  { label: 'Beauty', value: 'beauty', emoji: '✨' },
-  { label: 'Electronics', value: 'smartphones', emoji: '📱' },
-  { label: "Men's Fashion", value: 'mens-shirts', emoji: '👔' },
-  { label: "Women's Fashion", value: 'womens-dresses', emoji: '👗' },
-  { label: 'Home Decor', value: 'home-decoration', emoji: '🏠' },
-  { label: 'Skin Care', value: 'skin-care', emoji: '🌿' },
+  { label: "Beauty", value: "beauty", emoji: "✨" },
+  { label: "Electronics", value: "smartphones", emoji: "📱" },
+  { label: "Men's Fashion", value: "mens-shirts", emoji: "👔" },
+  { label: "Women's Fashion", value: "womens-dresses", emoji: "👗" },
+  { label: "Home Decor", value: "home-decoration", emoji: "🏠" },
+  { label: "Skin Care", value: "skin-care", emoji: "🌿" },
 ]
 
 export default function HomePage() {
@@ -36,14 +36,14 @@ export default function HomePage() {
       {/* ── Hero ── */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <div className={styles.heroPill}>New Collection 2025</div>
+          <div className={styles.heroPill}>Latest Collection 2026</div>
           <h1 className={styles.heroTitle}>
             Discover Products<br />
-            <em>You'll Love</em>
+            <em>You"ll Love</em>
           </h1>
           <p className={styles.heroSub}>
             Curated selection across beauty, fashion, tech & home.
-            Quality you can trust, prices you'll appreciate.
+            Quality you can trust, prices you"ll appreciate.
           </p>
           <div className={styles.heroActions}>
             <Link to="/shop" className={styles.heroBtn}>
@@ -64,10 +64,10 @@ export default function HomePage() {
         <div className={styles.heroVisual}>
           <div className={styles.heroGrid}>
             {[
-              'https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png',
-              'https://cdn.dummyjson.com/products/images/smartphones/iPhone%2015%20Plus/thumbnail.png',
-              'https://cdn.dummyjson.com/products/images/womens-dresses/Green%20Floral%20Dress/thumbnail.png',
-              'https://cdn.dummyjson.com/products/images/fragrances/Calvin%20Klein%20CK%20One/thumbnail.png',
+              "https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png",
+              "https://cdn.dummyjson.com/products/images/smartphones/iPhone%2015%20Plus/thumbnail.png",
+              "https://cdn.dummyjson.com/products/images/womens-dresses/Green%20Floral%20Dress/thumbnail.png",
+              "https://cdn.dummyjson.com/products/images/fragrances/Calvin%20Klein%20CK%20One/thumbnail.png",
             ].map((src, i) => (
               <div key={i} className={`${styles.heroImg} ${styles[`heroImg${i}`]}`}>
                 <img src={src} alt="" loading="lazy" />
@@ -80,10 +80,10 @@ export default function HomePage() {
       {/* ── Trust bar ── */}
       <section className={styles.trustBar}>
         {[
-          { icon: <Truck size={20} />, label: 'Free Shipping', sub: 'On orders over $100' },
-          { icon: <RotateCcw size={20} />, label: 'Easy Returns', sub: '30-day return policy' },
-          { icon: <Star size={20} />, label: 'Top Rated', sub: 'Curated 4.5+ products' },
-          { icon: <ShoppingBag size={20} />, label: '194+ Items', sub: 'Across all categories' },
+          { icon: <Truck size={20} />, label: "Free Shipping", sub: "On orders over $100" },
+          { icon: <RotateCcw size={20} />, label: "Easy Returns", sub: "30-day return policy" },
+          { icon: <Star size={20} />, label: "Top Rated", sub: "Curated 4.5+ products" },
+          { icon: <ShoppingBag size={20} />, label: "194+ Items", sub: "Across all categories" },
         ].map(({ icon, label, sub }) => (
           <div key={label} className={styles.trustItem}>
             <span className={styles.trustIcon}>{icon}</span>

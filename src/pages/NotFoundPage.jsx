@@ -1,6 +1,6 @@
-import { Link, useLocation } from 'react-router-dom'
-import { Compass } from 'lucide-react'
-import styles from './NotFoundPage.module.css'
+import { Link, useLocation } from "react-router-dom"
+import { Compass } from "lucide-react"
+import styles from "./NotFoundPage.module.css"
 
 export default function NotFoundPage() {
   const { pathname } = useLocation()
@@ -14,9 +14,9 @@ export default function NotFoundPage() {
         <p className={styles.code}>404</p>
         <h1 className={styles.title}>Page Not Found</h1>
         <p className={styles.message}>
-          The page you're looking for —{' '}
-          <code className={styles.path}>{pathname}</code>{' '}
-          — doesn't exist or has been moved.
+          The page you"re looking for —{" "}
+          <code className={styles.path}>{pathname}</code>{" "}
+          — doesn"t exist or has been moved.
         </p>
         <div className={styles.actions}>
           <Link to="/" className={styles.homeBtn}>Go to Homepage</Link>

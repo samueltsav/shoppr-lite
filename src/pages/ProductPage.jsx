@@ -1,16 +1,16 @@
-import { useState, useMemo } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, ShoppingBag, Package, Star, Shield, Minus, Plus } from 'lucide-react'
-import { useFetch } from '../hooks/useFetch.js'
-import { API_BASE } from '../utils/constants.js'
-import { useCart } from '../context/CartContext.jsx'
-import { formatPrice } from '../utils/helpers.js'
-import StarRating from '../components/ui/StarRating.jsx'
-import Badge from '../components/ui/Badge.jsx'
-import ProductCard from '../components/product/ProductCard.jsx'
-import Spinner from '../components/ui/Spinner.jsx'
-import ErrorMessage from '../components/ui/ErrorMessage.jsx'
-import styles from './ProductPage.module.css'
+import { useState, useMemo } from "react"
+import { useParams, Link, useNavigate } from "react-router-dom"
+import { ArrowLeft, ShoppingBag, Package, Star, Shield, Minus, Plus } from "lucide-react"
+import { useFetch } from "../hooks/useFetch.js"
+import { API_BASE } from "../utils/constants.js"
+import { useCart } from "../context/CartContext.jsx"
+import { formatPrice } from "../utils/helpers.js"
+import StarRating from "../components/ui/StarRating.jsx"
+import Badge from "../components/ui/Badge.jsx"
+import ProductCard from "../components/product/ProductCard.jsx"
+import Spinner from "../components/ui/Spinner.jsx"
+import ErrorMessage from "../components/ui/ErrorMessage.jsx"
+import styles from "./ProductPage.module.css"
 
 export default function ProductPage() {
   const { id } = useParams()
@@ -75,7 +75,7 @@ export default function ProductPage() {
                 {images.map((src, i) => (
                   <button
                     key={i}
-                    className={`${styles.thumb} ${i === activeImg ? styles.thumbActive : ''}`}
+                    className={`${styles.thumb} ${i === activeImg ? styles.thumbActive : ""}`}
                     onClick={() => setActiveImg(i)}
                   >
                     <img src={src} alt={`View ${i + 1}`} onError={e => { e.target.src = product.thumbnail }} />
@@ -149,11 +149,11 @@ export default function ProductPage() {
                 </div>
 
                 <button
-                  className={`${styles.addBtn} ${added ? styles.addedBtn : ''}`}
+                  className={`${styles.addBtn} ${added ? styles.addedBtn : ""}`}
                   onClick={handleAdd}
                 >
                   <ShoppingBag size={18} />
-                  {added ? 'Added to Cart!' : 'Add to Cart'}
+                  {added ? "Added to Cart!" : "Add to Cart"}
                 </button>
               </div>
             )}

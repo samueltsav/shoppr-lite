@@ -1,11 +1,11 @@
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Clock, Eye, ThumbsUp, ThumbsDown, Tag } from 'lucide-react'
-import { useFetch } from '../hooks/useFetch.js'
-import { API_BASE } from '../utils/constants.js'
-import { readingTime, syntheticDate } from '../utils/helpers.js'
-import Spinner from '../components/ui/Spinner.jsx'
-import ErrorMessage from '../components/ui/ErrorMessage.jsx'
-import styles from './PostPage.module.css'
+import { useParams, Link, useNavigate } from "react-router-dom"
+import { ArrowLeft, Clock, Eye, ThumbsUp, ThumbsDown, Tag } from "lucide-react"
+import { useFetch } from "../hooks/useFetch.js"
+import { API_BASE } from "../utils/constants.js"
+import { readingTime, syntheticDate } from "../utils/helpers.js"
+import Spinner from "../components/ui/Spinner.jsx"
+import ErrorMessage from "../components/ui/ErrorMessage.jsx"
+import styles from "./PostPage.module.css"
 
 export default function PostPage() {
   const { id } = useParams()
@@ -52,7 +52,7 @@ export default function PostPage() {
 
           {/* Body */}
           <div className={styles.body}>
-            {post.body?.split('\n').map((para, i) =>
+            {post.body?.split("\n").map((para, i) =>
               para.trim() ? <p key={i}>{para}</p> : null
             )}
           </div>

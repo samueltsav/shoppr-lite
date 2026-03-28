@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { ShoppingBag, Menu, X } from 'lucide-react'
-import { useCart } from '../../context/CartContext.jsx'
-import styles from './Navbar.module.css'
+import { useState } from "react"
+import { Link, NavLink } from "react-router-dom"
+import { ShoppingBag, Menu, X } from "lucide-react"
+import { useCart } from "../../context/CartContext.jsx"
+import styles from "./Navbar.module.css"
 
 const NAV_LINKS = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/shop', label: 'Shop' },
-  { to: '/blog', label: 'Journal' },
+  { to: "/", label: "Home", end: true },
+  { to: "/shop", label: "Shop" },
+  { to: "/blog", label: "Blog" },
 ]
 
 export default function Navbar() {
@@ -15,7 +15,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const getLinkClass = ({ isActive }) =>
-    `${styles.link} ${isActive ? styles.linkActive : ''}`
+    `${styles.link} ${isActive ? styles.linkActive : ""}`
 
   return (
     <>
@@ -35,7 +35,7 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <Link to="/cart" className={styles.cartBtn}>
               <ShoppingBag size={16} />
               <span className={styles.cartLabel}>Cart</span>
@@ -56,14 +56,14 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile menu */}
-      <div className={`${styles.mobileMenu} ${mobileOpen ? styles.open : ''}`}>
+      <div className={`${styles.mobileMenu} ${mobileOpen ? styles.open : ""}`}>
         {NAV_LINKS.map(({ to, label, end }) => (
           <NavLink
             key={to}
             to={to}
             end={end}
             className={({ isActive }) =>
-              `${styles.mobileLink} ${isActive ? styles.mobileLinkActive : ''}`
+              `${styles.mobileLink} ${isActive ? styles.mobileLinkActive : ""}`
             }
             onClick={() => setMobileOpen(false)}
           >
